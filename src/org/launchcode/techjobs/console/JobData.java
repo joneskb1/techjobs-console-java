@@ -7,9 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -65,20 +63,58 @@ public class JobData {
      * @param value Value of teh field to search for
      * @return List of all jobs matching the criteria
      */
+
+
+    public static ArrayList<HashMap<String, String>> findByValue (String searchTerm) {
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobsList = new ArrayList<>();
+        boolean check = false;
+
+            for (HashMap<String, String> item : allJobs) {
+                String str = item.values().toString().toLowerCase();
+                if (str.contains(searchTerm.toLowerCase())) {
+
+                    jobsList.add(item);
+                    check = true;
+                }
+            }
+//                fancy way to do this that I don't understand!
+//              if(item.values().stream().anyMatch(e -> e.contains(searchTerm))) {
+//                  jobsList.add(item);
+//                    check = true;
+//              };
+
+                if (check == false) {
+                    System.out.println("Item not found");
+                }
+
+        return jobsList;
+    }
+
+
+
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
 
         // load data, if not already loaded
         loadData();
 
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+        boolean check= false;
 
         for (HashMap<String, String> row : allJobs) {
+            String aValue = row.get(column).toLowerCase();
 
-            String aValue = row.get(column);
-
-            if (aValue.contains(value)) {
+            if (aValue.contains(value.toLowerCase())) {
                 jobs.add(row);
+                check = true;
             }
+
+        }
+
+        if (check == false) {
+            System.out.println("item not found");
+
         }
 
         return jobs;
